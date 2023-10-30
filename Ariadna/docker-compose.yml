@@ -1,0 +1,31 @@
+version: "3.8"
+name: ariadna
+services:
+  php:
+    build: .
+    working_dir: /var/www/html
+    restart: unless-stopped
+    volumes:
+      - ./app:/var/www/html
+    networks:
+      - net
+
+
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    volumes:
+      - ./app:/var/www/html
+      - ./nginx:/etc/nginx/conf.d/
+    ports:
+      - 9005:80
+    networks:
+      - net
+    depends_on:
+      - php
+
+
+networks:
+  net:
+    driver: bridge
+    name: ariadna-net
